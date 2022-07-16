@@ -82,6 +82,47 @@ while True:
         cv2.putText(img, f'volume: {int(volPer)}%', (20, 420), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 0), 1)
 
 
+       ######################################################## BRIGHTNESS ###############################
+
+        x1, y1 = lmList[4][1], lmList[4][2]
+        x3, y3 = lmList[16][1], lmList[16][2]
+        cx3, cy3 = (x1 + x3) // 2, (y1 + y3) // 2
+
+        cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+        cv2.circle(img, (x3, y3), 15, (255, 0, 255), cv2.FILLED)
+        cv2.line(img, (x1, y1), (x3, y3), (255, 0, 255), 3)
+
+        cv2.circle(img, (cx3, cy3), 15, (255, 0, 255), cv2.FILLED)
+
+        length = math.hypot(x3 - x1, y3 - y1)
+        # print(length)
+
+    # hand range 50-300
+    # volume range -65 to 0
+
+        bright = np.interp(length, [50, 250], [minbright, maxbright])
+        brightBar = np.interp(length, [50, 250], [400, 150])
+        brightPer = np.interp(length, [50, 250], [0, 100])
+        #print(bright)
+    # get current brightness value
+        #print(sbc.get_brightness())
+
+    # set brightness to 50%
+        #sbc.set_brightness(50)
+
+        print(sbc.get_brightness())
+
+    # set the brightness of the primary display to 75%
+        sbc.set_brightness(bright, display=0)
+
+        print(sbc.get_brightness())
+    # volume.SetMasterVolumeLevel(vol, None)
+        if length < 50:
+            cv2.circle(img, (cx3, cy3), 15, (0, 255, 0), cv2.FILLED)
+
+        cv2.rectangle(img, (25, 150), (50, 400), (255, 0, 0), 3)
+        cv2.rectangle(img, (25, int(brightBar)), (50, 400), (255, 0, 0), cv2.FILLED)
+        cv2.putText(img, f'Bright: {int(brightPer)}%', (10, 120), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 0, 0), 1)
 
     cTime = time.time()
     fps = 1/(cTime-pTime)
